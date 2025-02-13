@@ -12,7 +12,7 @@ interface NavigationContextType {
 const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
 
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentScreen, setCurrentScreen] = useState<Screen>("promos");
+  const [currentScreen, setCurrentScreen] = useState<Screen>("login");
 
   return (
     <NavigationContext.Provider value={{ currentScreen, setCurrentScreen }}>

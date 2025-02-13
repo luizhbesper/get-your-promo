@@ -25,9 +25,9 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="font-quicksand bg-zinc-950 text-zinc-50 h-screen flex flex-row">
+    <div className="font-quicksand bg-zinc-950 text-zinc-50 h-screen flex flex-row antialiased">
       <Navbar/>
-      <div className="flex-1 flex flex-col items-center justify-center">
+      <div className="flex-1">
         {
           renderPage()
         }

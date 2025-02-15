@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = (
                 let variantStyle = "";
                 switch (variant) {
                         case "primary":
-                                variantStyle = "bg-cyan-500 hover:bg-cyan-600";
+                                variantStyle = "bg-cyan-600 hover:bg-cyan-700";
                                 break;
                         case "secondary":
                                 variantStyle = "bg-zinc-700 hover:bg-zinc-600";

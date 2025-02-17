@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Play, Pause, Download } from "@phosphor-icons/react"
 import { useWavesurfer } from '@wavesurfer/react'
 import Button from "../components/Button";
@@ -9,15 +9,14 @@ const track = {
         mix: "Original Mix",
         tags: ["melodic techno", "released"],
         receiver: "Alka",
-        autoplay: false
 }
 
 const formatPlayerTime = (seconds: number) => [seconds / 60, seconds % 60].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':')
 
 const Player: React.FC = () => {
         const playerRef = useRef(null)
-        const [isPlaying, setIsPlaying] = useState(track.autoplay);
-        const { wavesurfer } = useWavesurfer({
+        const [isPlaying, setIsPlaying] = useState(false);
+        const { wavesurfer, isReady } = useWavesurfer({
                 container: playerRef,
                 height: 60,
                 barGap: 2,
@@ -25,10 +24,22 @@ const Player: React.FC = () => {
                 waveColor: '#155E75',
                 interact: true,
                 autoScroll: true,
-                autoplay: track.autoplay,   //TODO: Fix Autoplay state
                 progressColor: '#22D3EE',
                 url: "src/assets/music/Revelations.wav",
         })
+
+        useEffect(() => {
+                if(wavesurfer){
+                        const handleFinish = () => {
+                                wavesurfer.stop()
+                                setIsPlaying(false)
+                        }
+                        wavesurfer.on('finish', handleFinish)
+                        return () => {
+                                wavesurfer.un('finish', handleFinish)
+                        }
+                } 
+        }, [wavesurfer])        
 
         const onPlayPause = useCallback(() => {
                 setIsPlaying(!isPlaying)
@@ -47,7 +58,7 @@ const Player: React.FC = () => {
                                 />
                                 
                                 <button 
-                                        className="absolute flex w-20 h-20 bg-cyan-500 hover:bg-cyan-600 rounded-full cursor-pointer transition-colors flex justify-center items-center"
+                                        className="absolute w-20 h-20 bg-cyan-500 hover:bg-cyan-600 rounded-full cursor-pointer transition-colors flex justify-center items-center"
                                         onClick={() => onPlayPause()}
                                 >
                                         {isPlaying ? 

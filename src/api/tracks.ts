@@ -19,7 +19,7 @@ export const tracks: TrackType[] = [
                 views: 1,
                 plays: 0,
                 downloads: 0,
-                lastActivity: '2023-10-01T12:00:00Z',
+                lastActivity: '2025-02-03T12:00:00Z',
             },
             {
                 id: 'd232b0f6-3b9a-4b54-bcf8-540611d249b4',
@@ -27,7 +27,7 @@ export const tracks: TrackType[] = [
                 views: 2,
                 plays: 1,
                 downloads: 1,
-                lastActivity: '2023-10-02T12:00:00Z',
+                lastActivity: '2025-02-02T12:00:00Z',
             },
         ],
     },
@@ -38,7 +38,7 @@ export const tracks: TrackType[] = [
         mix: 'Original Mix',
         tags: ['melodic techno', 'unreleased'],
         album: 'Promos',
-        albumCover: 'src/assets/img/euphoria.png',
+        albumCover: 'src/assets/img/artwork.png',
         duration: 300,
         url: 'src/assets/music/Euphoria.wav',
         promos: [
@@ -48,7 +48,7 @@ export const tracks: TrackType[] = [
                 views: 0,
                 plays: 0,
                 downloads: 0,
-                lastActivity: '2023-10-03T12:00:00Z',
+                lastActivity: '2023-10-04T12:00:00Z',
             },
             {
                 id: '76667b10-c3d4-411c-bf01-3e6a0512c033', // Simulated UUID8 for the promo

@@ -1,12 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useTracks from '../hooks/useTracks';
+import { TrackType } from '../types/TrackType';
+import TrackOverview from '../components/TrackOverview';
 
 const Promos = () => {
     const { getAllTracks } = useTracks();
+    const [tracks, setTracks] = useState<TrackType[]>([]);
 
     useEffect(() => {
         getAllTracks().then((tracks) => {
-            console.log(tracks);
+            setTracks(tracks);
         });
     }, [getAllTracks]);
 
@@ -15,12 +18,10 @@ const Promos = () => {
             <h1 className="text-2xl md:text-3xl font-bold text-left md:w-xl lg:w-3xl">
                 Your Promos
             </h1>
-            <div>
-                <img
-                    src="src/assets/img/artwork.png"
-                    alt="Promo Album Cover"
-                    className="absolute rounded-lg w-18 h-18"
-                />
+            <div className="flex flex-col gap-y-2 mt-4">
+                {tracks.map((track) => (
+                    <TrackOverview track={track} key={track.id} />
+                ))}
             </div>
         </div>
     );

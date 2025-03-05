@@ -2,7 +2,7 @@
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-export type Screen = 'login' | 'player' | 'promos' | 'upload';
+export type Screen = 'login' | 'player' | 'promos' | 'upload' | 'notFoundPromo';
 
 interface NavigationContextType {
     currentScreen: Screen;
@@ -16,7 +16,7 @@ const NavigationContext = createContext<NavigationContextType | undefined>(
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const [currentScreen, setCurrentScreen] = useState<Screen>('promos');
+    const [currentScreen, setCurrentScreen] = useState<Screen>('notFoundPromo');
 
     return (
         <NavigationContext.Provider value={{ currentScreen, setCurrentScreen }}>

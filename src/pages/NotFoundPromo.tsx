@@ -1,22 +1,6 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { X, Download } from '@phosphor-icons/react';
-import { useWavesurfer } from '@wavesurfer/react';
-import Button from '../components/Button';
+import { X } from '@phosphor-icons/react';
 
-const track = {
-    title: 'Revelations',
-    artists: 'Acrobatik, Alka (BR)',
-    mix: 'Original Mix',
-    tags: ['melodic techno', 'released'],
-    receiver: 'Alka',
-};
-
-const formatPlayerTime = (seconds: number) =>
-    [seconds / 60, seconds % 60]
-        .map((v) => `0${Math.floor(v)}`.slice(-2))
-        .join(':');
-
-const NotFoundPromo: React.FC = () => {
+const NotFoundPromo = () => {
     return (
         <div className="flex flex-col items-center justify-center h-screen">
             <h1 className="text-2xl md:text-3xl font-bold text-left md:w-xl lg:w-3xl">

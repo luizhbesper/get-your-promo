@@ -27,7 +27,7 @@ export const tracks: TrackType[] = [
                 views: 2,
                 plays: 1,
                 downloads: 1,
-                lastActivity: '2025-02-02T12:00:00Z',
+                lastActivity: '2022-02-02T12:00:00Z',
             },
         ],
     },

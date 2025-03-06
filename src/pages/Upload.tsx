@@ -3,6 +3,9 @@ import { useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { Image, UploadSimple, X } from "@phosphor-icons/react";
 import { useNavigation } from "@contexts/NavigationContext";
+import Loading from "@components/Loading";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface UploadFormData {
     title: string;
@@ -11,45 +14,50 @@ interface UploadFormData {
 }
 
 const Upload = () => {
-    const [uploadProgress, setUploadProgress] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [artworkFile, setArtworkFile] = useState<File | null>(null);
     const [showForm, setShowForm] = useState(false);
     const { register, handleSubmit } = useForm<UploadFormData>();
     const { setCurrentScreen } = useNavigation();
 
-    const onDrop = (acceptedFiles: File[]) => {
+    const onDropTrackFile = (acceptedFiles: File[], rejectedFiles: any[]) => {
+        if (rejectedFiles.length > 0) {
+            toast.error('Please upload only .mp3 or .wav files', {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            return;
+        }
+
         const file = acceptedFiles[0];
         setUploadedFile(file);
-        setShowForm(false);
-        
-        setUploadProgress(0);
-        const startTime = Date.now();
-        const duration = 2000; 
-
-        const interval = setInterval(() => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min((elapsed / duration) * 100, 100);
-            
-            setUploadProgress(progress);
-            
-            //TODO: Change progress bar to show the upload progress
-            if (progress >= 100) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    setShowForm(true);
-                }, 200); 
-            }
-        }, 16); 
+        setShowForm(true);
     };
 
-    const onDropArtwork = (acceptedFiles: File[]) => {
+    const onDropArtwork = (acceptedFiles: File[], rejectedFiles: any[]) => {
+        if (rejectedFiles.length > 0) {
+            toast.error('Please upload only .jpg, .jpeg or .png files', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            return;
+        }
+
         const file = acceptedFiles[0];
         setArtworkFile(file);
     };
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
+        onDrop: onDropTrackFile,
         accept: {
             'audio/mpeg': ['.mp3'],
             'audio/wav': ['.wav']
@@ -69,20 +77,39 @@ const Upload = () => {
         maxFiles: 1
     });
 
-    const onSubmit = (data: UploadFormData) => {
-        console.log({ ...data, trackFile: uploadedFile, artworkFile: artworkFile });
-        setCurrentScreen('promos');
-        // TODO: Implement the logic to send the data to the backend
+    const onSubmit = async (data: UploadFormData) => {
+        setIsLoading(true);
+        try {
+            // TODO: Implement the logic to send the data to the backend
+            console.log({ ...data, trackFile: uploadedFile, artworkFile: artworkFile });
+            setCurrentScreen('promos');
+        } catch (error) {
+            console.error('Error uploading:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const removeFile = () => {
         setUploadedFile(null);
-        setUploadProgress(0);
         setShowForm(false);
     };
 
     return (
         <div className="flex flex-col h-screen">
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+            />
+            <Loading isLoading={isLoading} />
             <div className="flex-1 flex items-center justify-center p-12">
                 <div className="w-full max-w-4xl flex flex-col">
                     <h1 className="text-2xl md:text-3xl font-bold mb-8">
@@ -93,7 +120,7 @@ const Upload = () => {
                         <div className="flex flex-col items-center justify-center">
                             <div
                                 {...getRootProps()}
-                                className={`w-full h-100 flex items-center justify-center rounded-lg rounded-b-none p-12 cursor-pointer border border-zinc-800 transition-colors ${
+                                className={`w-full h-100 flex items-center justify-center rounded-lg p-12 cursor-pointer border border-zinc-800 transition-colors ${
                                     isDragActive 
                                         ? 'bg-zinc-600 border-zinc-600' 
                                         : 'bg-zinc-800 hover:border-zinc-600'
@@ -109,13 +136,6 @@ const Upload = () => {
                                         .mp3 or .wav only
                                     </p>
                                 </div>
-                            </div>
-
-                            <div className="w-full h-2 bg-zinc-200 rounded-b-lg">
-                                <div
-                                    className="h-full bg-cyan-500 transition-all duration-200"
-                                    style={{ width: `${uploadProgress}%` }}
-                                />
                             </div>
                         </div>
                     ) : (

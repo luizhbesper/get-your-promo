@@ -16,7 +16,7 @@ const NavigationContext = createContext<NavigationContextType | undefined>(
 export const NavigationProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const [currentScreen, setCurrentScreen] = useState<Screen>('upload');
+    const [currentScreen, setCurrentScreen] = useState<Screen>('promos');
 
     return (
         <NavigationContext.Provider value={{ currentScreen, setCurrentScreen }}>

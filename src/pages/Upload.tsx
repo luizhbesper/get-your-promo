@@ -70,7 +70,8 @@ const Upload = () => {
     });
 
     const onSubmit = (data: UploadFormData) => {
-        console.log({ ...data, file: uploadedFile });
+        console.log({ ...data, trackFile: uploadedFile, artworkFile: artworkFile });
+        setCurrentScreen('promos');
         // TODO: Implement the logic to send the data to the backend
     };
 

@@ -4,9 +4,9 @@ export interface TrackType {
     id: string;
     title: string;
     artists: string;
-    mix: string;
+    mix?: string;
     tags: string[];
-    album: string;
+    album?: string;
     albumCover: string;
     duration: number;
     url: string;

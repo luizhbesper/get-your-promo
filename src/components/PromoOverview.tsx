@@ -70,7 +70,7 @@ const PromoOverview: React.FC<PromoOverviewProps> = ({ promo }) => {
             onSubmit={handleSubmit(onSubmit)}
         >
             <input
-                className="flex-1 rounded-lg bg-zinc-900 p-3 mr-20 text-zinc-400 focus:text-zinc-100"
+                className="flex-1 rounded-lg bg-zinc-900 p-3 mr-20 h-10 text-zinc-400 focus:text-zinc-100"
                 {...register('promoReceiver')}
                 onChange={onChangeReceiver}
             />

@@ -4,5 +4,6 @@ export interface PromoType {
     views: number;
     plays: number;
     downloads: number;
-    lastActivity: string;
+    lastActivity: string | null;
+    trackId: string;
 }

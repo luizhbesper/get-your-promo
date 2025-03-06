@@ -3,6 +3,8 @@ import type { TrackType } from '@/types/TrackType';
 import { Eye, Link, Play, DownloadSimple, Trash, Plus } from '@phosphor-icons/react';
 import { getMostRecentActivity } from '@utils/dateFormatter';
 import PromoOverview from '@components/PromoOverview';
+import usePromo from '@hooks/usePromo';
+import type { PromoType } from '@/types/PromoType';
 
 interface TrackOverviewProps {
     track: TrackType;
@@ -10,10 +12,19 @@ interface TrackOverviewProps {
 
 const TrackOverview: React.FC<TrackOverviewProps> = ({ track }) => {
     const [promosPanelOpen, setPromosPanelOpen] = useState(false);
+    const { insertPromo } = usePromo();
 
     const handleCreatePromo = () => {
-        // TODO: Implement create promo logic
-        console.log('Create promo for track:', track.id);
+        const newPromo: PromoType = {
+            id: crypto.randomUUID(),
+            receiver: '',
+            views: 0,
+            plays: 0,
+            downloads: 0,
+            lastActivity: null,
+            trackId: track.id,
+        };
+        insertPromo(newPromo);
     };
 
     return (
@@ -92,7 +103,6 @@ const TrackOverview: React.FC<TrackOverviewProps> = ({ track }) => {
             </div>
             {promosPanelOpen && (
                 <div className="flex flex-col rounded-lg shadow-lg mb-4 gap-y-3 mt-2">
-                    
                     {track.promos.map((promo, index) => (
                         <PromoOverview promo={promo} key={index} />
                     ))}

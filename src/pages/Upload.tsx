@@ -103,12 +103,9 @@ const Upload = () => {
                 return;
             }
 
-            // Criar URL temporária para o arquivo de áudio
             const audioUrl = uploadedFile ? URL.createObjectURL(uploadedFile) : '';
-            // Criar URL temporária para o artwork
             const artworkUrl = artworkFile ? URL.createObjectURL(artworkFile) : '';
 
-            // Tratar as tags: remover espaços extras e filtrar tags vazias
             const tags = data.tags 
                 ? data.tags
                     .split(',')
@@ -122,7 +119,7 @@ const Upload = () => {
                 artists: data.artists,
                 tags: tags,
                 albumCover: artworkUrl,
-                duration: 0, // TODO: Implementar cálculo da duração
+                duration: 0, // TODO: Implement duration calc
                 url: audioUrl,
                 promos: []
             };

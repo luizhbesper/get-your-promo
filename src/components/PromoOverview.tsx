@@ -11,7 +11,7 @@ import {
 } from '@phosphor-icons/react';
 import { getMostRecentActivity } from '@utils/dateFormatter';
 import { useForm, SubmitHandler } from 'react-hook-form';
-
+import usePromo from '@hooks/usePromo';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 
@@ -32,20 +32,20 @@ const PromoOverview: React.FC<PromoOverviewProps> = ({ promo }) => {
     const [copyTooltip, setCopyTooltip] = useState(false);
     const [receiver, setReceiver] = useState(promo.receiver);
 
+    const { deletePromo, updatePromoReceiver } = usePromo();
+
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         setReceiver(data.promoReceiver);
         setSaveEnabled(false);
-        //TODO: Implement a function to save the new receiver
+        updatePromoReceiver(promo.id, data.promoReceiver);
     };
 
     const onChangeReceiver = () => {
         setSaveEnabled(true);
-        //TODO: Implement a debounce function to avoid multiple calls
     };
 
-    const deletePromo = () => {
-        console.log('Deleting promo:', promo.id);
-        //TODO: Implement a function to delete the promo
+    const handleDeletePromo = () => {
+        deletePromo(promo.id);
     };
 
     const copyToClipboard = () => {
@@ -127,7 +127,7 @@ const PromoOverview: React.FC<PromoOverviewProps> = ({ promo }) => {
                         </button>
                         <button
                             type="button"
-                            onClick={deletePromo}
+                            onClick={handleDeletePromo}
                             className="w-8 h-8 rounded-lg flex items-center justify-center bg-zinc-500 ml-2 hover:bg-red-400 cursor-pointer"
                         >
                             <Trash weight="bold" />

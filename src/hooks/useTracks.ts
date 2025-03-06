@@ -23,6 +23,7 @@ const useTracks = () => {
     };
 
     const insertTrack = (track: TrackType) => {
+        console.log('Inserting track:', track);
         tracks.push(track);
     };
 

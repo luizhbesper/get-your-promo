@@ -1,11 +1,11 @@
 import React from 'react';
-import { useNavigation } from './contexts/NavigationContext';
-import Login from './pages/Login';
-import Player from './pages/Player';
-import Promos from './pages/Promos';
-import Upload from './pages/Upload';
-import NotFoundPromo from './pages/NotFoundPromo';
-import Navbar from './components/Navbar';
+import { useNavigation } from '@contexts/NavigationContext';
+import Login from '@pages/Login';
+import Player from '@pages/Player';
+import Promos from '@pages/Promos';
+import Upload from '@pages/Upload';
+import NotFoundPromo from '@pages/NotFoundPromo';
+import Navbar from '@components/Navbar';
 
 const App: React.FC = () => {
     const { currentScreen } = useNavigation();

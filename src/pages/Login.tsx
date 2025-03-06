@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { CaretRight } from '@phosphor-icons/react';
-import Button from '../components/Button';
-import { useNavigation } from '../contexts/NavigationContext';
+import Button from '@components/Button';
+import { useNavigation } from '@contexts/NavigationContext';
 
 type Inputs = {
     email: string;

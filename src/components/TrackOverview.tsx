@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { TrackType } from '../types/TrackType';
+import type { TrackType } from '@/types/TrackType';
 import { Eye, Link, Play, DownloadSimple, Trash } from '@phosphor-icons/react';
-import { getMostRecentActivity } from '../utils/dateFormatter';
-import PromoOverview from './PromoOverview';
+import { getMostRecentActivity } from '@utils/dateFormatter';
+import PromoOverview from '@components/PromoOverview';
+
 interface TrackOverviewProps {
     track: TrackType;
 }

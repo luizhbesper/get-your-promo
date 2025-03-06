@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Play, Pause, Download } from '@phosphor-icons/react';
 import { useWavesurfer } from '@wavesurfer/react';
-import Button from '../components/Button';
+import Button from '@components/Button';
 
 const track = {
     title: 'Revelations',

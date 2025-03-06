@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import useTracks from '../hooks/useTracks';
-import { TrackType } from '../types/TrackType';
-import TrackOverview from '../components/TrackOverview';
+import useTracks from '@hooks/useTracks';
+import type { TrackType } from '@/types/TrackType';
+import TrackOverview from '@components/TrackOverview';
 
 const Promos = () => {
     const { getAllTracks } = useTracks();

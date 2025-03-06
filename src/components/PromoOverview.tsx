@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PromoType } from '../types/PromoType';
+import type { PromoType } from '@/types/PromoType';
 import {
     Eye,
     CopySimple,
@@ -9,7 +9,7 @@ import {
     FloppyDisk,
     X,
 } from '@phosphor-icons/react';
-import { getMostRecentActivity } from '../utils/dateFormatter';
+import { getMostRecentActivity } from '@utils/dateFormatter';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { Tooltip } from 'react-tooltip';

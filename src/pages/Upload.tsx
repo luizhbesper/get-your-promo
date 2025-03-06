@@ -6,11 +6,13 @@ import { useNavigation } from "@contexts/NavigationContext";
 import Loading from "@components/Loading";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useTracks from "@hooks/useTracks";
+import type { TrackType } from "@/types/TrackType";
 
 interface UploadFormData {
     title: string;
     artists: string;
-    tags: string;
+    tags?: string;
 }
 
 const Upload = () => {
@@ -18,8 +20,9 @@ const Upload = () => {
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [artworkFile, setArtworkFile] = useState<File | null>(null);
     const [showForm, setShowForm] = useState(false);
-    const { register, handleSubmit } = useForm<UploadFormData>();
+    const { register, handleSubmit, formState: { errors } } = useForm<UploadFormData>();
     const { setCurrentScreen } = useNavigation();
+    const { insertTrack } = useTracks();
 
     const onDropTrackFile = (acceptedFiles: File[], rejectedFiles: any[]) => {
         if (rejectedFiles.length > 0) {
@@ -80,11 +83,55 @@ const Upload = () => {
     const onSubmit = async (data: UploadFormData) => {
         setIsLoading(true);
         try {
-            // TODO: Implement the logic to send the data to the backend
-            console.log({ ...data, trackFile: uploadedFile, artworkFile: artworkFile });
+            if (!uploadedFile) {
+                toast.error('Please upload a track file');
+                return;
+            }
+
+            if (!artworkFile) {
+                toast.error('Please upload an artwork');
+                return;
+            }
+
+            if (!data.title.trim()) {
+                toast.error('Please enter a title');
+                return;
+            }
+
+            if (!data.artists.trim()) {
+                toast.error('Please enter at least one artist');
+                return;
+            }
+
+            // Criar URL temporária para o arquivo de áudio
+            const audioUrl = uploadedFile ? URL.createObjectURL(uploadedFile) : '';
+            // Criar URL temporária para o artwork
+            const artworkUrl = artworkFile ? URL.createObjectURL(artworkFile) : '';
+
+            // Tratar as tags: remover espaços extras e filtrar tags vazias
+            const tags = data.tags 
+                ? data.tags
+                    .split(',')
+                    .map(tag => tag.trim())
+                    .filter(tag => tag.length > 0)
+                : [];
+
+            const newTrack: TrackType = {
+                id: crypto.randomUUID(),
+                title: data.title,
+                artists: data.artists,
+                tags: tags,
+                albumCover: artworkUrl,
+                duration: 0, // TODO: Implementar cálculo da duração
+                url: audioUrl,
+                promos: []
+            };
+
+            insertTrack(newTrack);
             setCurrentScreen('promos');
         } catch (error) {
             console.error('Error uploading:', error);
+            toast.error('Error uploading track');
         } finally {
             setIsLoading(false);
         }
@@ -93,6 +140,10 @@ const Upload = () => {
     const removeFile = () => {
         setUploadedFile(null);
         setShowForm(false);
+    };
+
+    const removeArtwork = () => {
+        setArtworkFile(null);
     };
 
     return (
@@ -143,28 +194,39 @@ const Upload = () => {
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="flex gap-8">
                                     <div className="flex flex-col gap-4">
-                                        <div
-                                            {...getArtworkRootProps()}
-                                            className={`w-64 h-64 flex items-center justify-center rounded-lg cursor-pointer border border-zinc-800 transition-colors ${
-                                                isArtworkDragActive 
-                                                    ? 'bg-zinc-600 border-zinc-600' 
-                                                    : 'bg-zinc-800 hover:border-zinc-600'
-                                            }`}
-                                        >
-                                            <input {...getArtworkInputProps()} />
-                                            {artworkFile ? (
-                                                <img
-                                                    src={URL.createObjectURL(artworkFile)}
-                                                    alt="Artwork"
-                                                    className="w-full h-full object-cover rounded-lg"
-                                                />
-                                            ) : (
-                                                <div className="flex flex-col items-center justify-center gap-2 p-4">
-                                                    <Image size={100} className="text-zinc-400" weight="thin"/>
-                                                    <p className="text-zinc-400 text-center text-sm">
-                                                        Drag and Drop track's artwork
-                                                    </p>
-                                                </div>
+                                        <div className="relative">
+                                            <div
+                                                {...getArtworkRootProps()}
+                                                className={`w-64 h-64 flex items-center justify-center rounded-lg cursor-pointer border border-zinc-800 transition-colors ${
+                                                    isArtworkDragActive 
+                                                        ? 'bg-zinc-600 border-zinc-600' 
+                                                        : 'bg-zinc-800 hover:border-zinc-600'
+                                                }`}
+                                            >
+                                                <input {...getArtworkInputProps()} />
+                                                {artworkFile ? (
+                                                    <img
+                                                        src={URL.createObjectURL(artworkFile)}
+                                                        alt="Artwork"
+                                                        className="w-full h-full object-cover rounded-lg"
+                                                    />
+                                                ) : (
+                                                    <div className="flex flex-col items-center justify-center gap-2 p-4">
+                                                        <Image size={100} className="text-zinc-400" weight="thin"/>
+                                                        <p className="text-zinc-400 text-center text-sm">
+                                                            Drag and Drop track's artwork
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {artworkFile && (
+                                                <button
+                                                    type="button"
+                                                    onClick={removeArtwork}
+                                                    className="absolute -top-2 -right-2 text-zinc-400 hover:text-red-500 transition-colors cursor-pointer bg-zinc-900 rounded-full p-1"
+                                                >
+                                                    <X size={20} />
+                                                </button>
                                             )}
                                         </div>
                                         <span className="text-zinc-400 text-sm text-center">
@@ -174,7 +236,7 @@ const Upload = () => {
 
                                     <div className="flex-1 flex flex-col gap-4">
                                         <div>
-                                            <span className="text-zinc-200">Title</span>
+                                            <span className="text-zinc-200">Title *</span>
                                             <div className="flex items-center p-3 bg-zinc-700 rounded-lg mt-2">
                                                 <input
                                                     {...register("title", { required: true })}
@@ -182,10 +244,13 @@ const Upload = () => {
                                                     className="w-full bg-transparent text-zinc-100 outline-none"
                                                 />
                                             </div>
+                                            {errors.title && (
+                                                <span className="text-red-500 text-sm mt-1">Title is required</span>
+                                            )}
                                         </div>
 
                                         <div>
-                                            <span className="text-zinc-200">Artists</span>
+                                            <span className="text-zinc-200">Artists *</span>
                                             <div className="flex items-center p-3 bg-zinc-700 rounded-lg mt-2">
                                                 <input
                                                     {...register("artists", { required: true })}
@@ -193,21 +258,24 @@ const Upload = () => {
                                                     className="w-full bg-transparent text-zinc-100 outline-none"
                                                 />
                                             </div>
+                                            {errors.artists && (
+                                                <span className="text-red-500 text-sm mt-1">Artists is required</span>
+                                            )}
                                         </div>
 
                                         <div>
                                             <span className="text-zinc-200">Tags</span>
                                             <div className="flex items-center p-3 bg-zinc-700 rounded-lg mt-2">
                                                 <input
-                                                    {...register("tags", { required: true })}
-                                                    placeholder="Tag track's genre or any tag you want"
+                                                    {...register("tags")}
+                                                    placeholder="Tag track's. Separate by commas"
                                                     className="w-full bg-transparent text-zinc-100 outline-none"
                                                 />
                                             </div>
                                         </div>
 
                                         <div>
-                                            <span className="text-zinc-200">Track file</span>
+                                            <span className="text-zinc-200">Track file *</span>
                                             <div className="flex items-center justify-between p-3 bg-zinc-700 rounded-lg mt-2">
                                                 <div className="flex items-center gap-3">
                                                     <span className="text-sm text-zinc-400">{uploadedFile?.name}</span>

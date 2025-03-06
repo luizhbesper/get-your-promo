@@ -22,8 +22,13 @@ const useTracks = () => {
         });
     };
 
+    const insertTrack = (track: TrackType) => {
+        tracks.push(track);
+    };
+
     return {
         getAllTracks,
+        insertTrack,
     };
 };
 
